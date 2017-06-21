@@ -3,18 +3,19 @@ package com.example.dellpc.currentnews;
 
 public class FeedItem {
     private int id;
-    private String source, title, image, profilePic, timeStamp, url,description,author;
+    private String source, title, image, profilePic, timeStamp, url, description, author;
 
     public FeedItem() {
     }
 
     public FeedItem(int id, String source, String image, String title,
-                    String profilePic, String timeStamp, String url) {
+                    String profilePic, String timeStamp, String url, String description) {
         super();
         this.id = id;
         this.source = source;
         this.image = image;
         this.title = title;
+        this.description = description;
         this.profilePic = profilePic;
         this.timeStamp = timeStamp;
         this.url = url;
@@ -75,18 +76,12 @@ public class FeedItem {
     public void setUrl(String url) {
         this.url = url;
     }
+
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String url) {
+    public void setDescription(String description) {
         this.description = description;
-    }
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 }

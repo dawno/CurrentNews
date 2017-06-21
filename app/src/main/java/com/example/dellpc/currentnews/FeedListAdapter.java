@@ -57,23 +57,31 @@ public class FeedListAdapter extends BaseAdapter {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView timestamp = (TextView) convertView
                 .findViewById(R.id.timestamp);
+        TextView des = (TextView)convertView.findViewById(R.id.description);
         TextView statusMsg = (TextView) convertView
                 .findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
-        NetworkImageView profilePic = (NetworkImageView) convertView
-                .findViewById(R.id.profilePic);
+       // NetworkImageView profilePic = (NetworkImageView) convertView
+         //       .findViewById(R.id.profilePic);
         FeedImageView feedImageView = (FeedImageView) convertView
                 .findViewById(R.id.feedImage1);
 
         FeedItem item = feedItems.get(position);
 
         name.setText(item.getSource());
-
+        if (!TextUtils.isEmpty(item.getDescription())) {
+            des.setText(item.getDescription());
+            des.setVisibility(View.VISIBLE);
+        } else {
+            // status is empty, remove from view
+            des.setVisibility(View.GONE);
+        }
         // Converting timestamp into x ago format
-        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+      /* CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                 Long.parseLong(item.getTimeStamp()),
                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
-        timestamp.setText(timeAgo);
+        timestamp.setText(timeAgo);  */
+        timestamp.setText(item.getTimeStamp());
 
         // Chcek for empty status message
         if (!TextUtils.isEmpty(item.getTitle())) {
@@ -98,7 +106,7 @@ public class FeedListAdapter extends BaseAdapter {
         }
 
         // user profile pic
-        profilePic.setImageUrl(item.getProfilePic(), imageLoader);
+      //  profilePic.setImageUrl(item.getProfilePic(), imageLoader);
 
         // Feed image
         if (item.getImge() != null) {

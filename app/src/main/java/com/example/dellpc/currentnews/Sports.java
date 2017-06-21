@@ -9,8 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +47,7 @@ public class Sports extends Fragment {
     private ListView listView;
     private FeedListAdapter listAdapter;
     private ImageView img;
+    private  Date date , currentDate;
     private List<FeedItem> feedItems;
     private String URL_FEED = "https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
     public Sports() {
@@ -101,29 +110,81 @@ public class Sports extends Fragment {
         }
 return view;
     }
+  /*  String convertDate(String inputDate) {
+
+        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        form.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        try
+        {
+            date = form.parse(inputDate);
+        }
+        catch (ParseException e)
+        {
+
+            e.printStackTrace();
+        }
+        SimpleDateFormat postFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String newDateStr = postFormater.format(date);
+        try
+        {
+            currentDate = form.parse(newDateStr);
+        }
+        catch (ParseException e)
+        {
+
+            e.printStackTrace();
+        }
+        long diffInMs = currentDate.getTime() - date.getTime();
+        String s = String.valueOf(diffInMs);
+       //  TimeUnit.DAYS.convert(currentDate.getTime() - date.getTime(), TimeUnit.SECONDS);
+      //  String s = String.valueOf(TimeUnit.MILLISECONDS.convert(date - currentDate, TimeUnit.MILLISECONDS));
+        return s;
+    }*/
+  String convertDate(String inputDate) {
+
+      SimpleDateFormat form = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+      form.setTimeZone(TimeZone.getTimeZone("GMT"));
+      Date date = null;
+      try
+      {
+          date = form.parse(inputDate);
+      }
+      catch (ParseException e)
+      {
+
+          e.printStackTrace();
+      }
+
+
+      String newDateStr = form.format(date);
+     return newDateStr;
+  }
 
     /**
      * Parsing json reponse and passing the data to feed view list adapter
      * */
     private void parseJsonFeed(JSONObject response) {
         try {
-            JSONArray feedArray = response.getJSONArray("article");
+            JSONArray feedArray = response.getJSONArray("articles");
 
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
                 FeedItem item = new FeedItem();
-                item.setId(i);
-                item.setSource("BBC SPORTS");
+               item.setId(i);
+                item.setSource("BBC");
 
                 // Image might be null sometimes
-                String image = feedObj.isNull("urltoImage") ? null : feedObj
-                        .getString("urltoImage");
+                String image = feedObj.isNull("urlToImage") ? null : feedObj
+                        .getString("urlToImage");
                 item.setImge(image);
                 item.setTitle(feedObj.getString("title"));
-                img.setImageResource(R.drawable.bbc);
+                item.setDescription(feedObj.getString("description"));
+              //  item.setProfilePic(feedObj.getString("profilePic"));
+               // img.setImageResource(R.drawable.bbc);
                 item.setTimeStamp(feedObj.getString("publishedAt"));
-
+                 // item.setTimeStamp("1403375851930");
                 // url might be null sometimes
                 String feedUrl = feedObj.isNull("url") ? null : feedObj
                         .getString("url");
@@ -137,8 +198,4 @@ return view;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-
-    }
-
+    }}
