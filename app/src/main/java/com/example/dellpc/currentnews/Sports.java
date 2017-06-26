@@ -1,45 +1,32 @@
 package com.example.dellpc.currentnews;
 
-import android.content.Context;
-import android.net.Uri;
+
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.ListView;
-
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
+import com.android.volley.Request;
 import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.dellpc.currentnews.R;
 
 public class Sports extends Fragment {
@@ -47,9 +34,13 @@ public class Sports extends Fragment {
     private ListView listView;
     private FeedListAdapter listAdapter;
     private ImageView img;
+    private int i ;
+    TabLayout tabs ;
     private  Date date , currentDate;
     private List<FeedItem> feedItems;
-    private String URL_FEED = "https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
+    private JSONObject first,second;
+    private String URL_FEED_1 = "https://newsapi.org/v1/articles?source=fortune&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
+    private String URL_FEED_2 = "https://newsapi.org/v1/articles?source=espn-cric-info&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
     public Sports() {
         // Required empty public constructor
     }
@@ -57,7 +48,8 @@ public class Sports extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        feedItems = new ArrayList<FeedItem>();
+        feedItems = new ArrayList<>();
+        feedItems.clear();
 
     }
 
@@ -69,32 +61,19 @@ public class Sports extends Fragment {
         listView = (ListView)view. findViewById(R.id.list);
        img = (ImageView)view.findViewById(R.id.profilePic);
         listAdapter = new FeedListAdapter(Sports.this.getActivity(), feedItems);
+        tabs = (TabLayout)view.findViewById(R.id.tabs);
         listView.setAdapter(listAdapter);
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Entry entry = cache.get(URL_FEED);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
 
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest jsonReqa = new JsonObjectRequest(Method.GET,
+                    URL_FEED_1, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     VolleyLog.d(TAG, "Response: " + response.toString());
                     if (response != null) {
-                        parseJsonFeed(response);
+             first = null;
+                             first = response;
+
                     }
                 }
             }, new Response.ErrorListener() {
@@ -106,76 +85,74 @@ public class Sports extends Fragment {
             });
 
             // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
+            AppController.getInstance().addToRequestQueue(jsonReqa);
+            JsonObjectRequest jsonReqb = new JsonObjectRequest(Method.GET,
+                    URL_FEED_2, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response1) {
+                    VolleyLog.d(TAG, "Response: " + response1.toString());
+                    if (response1 != null) {
+                        second = null;
+                        second =  response1;
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            });
+
+            // Adding request to volley request queue
+            AppController.getInstance().addToRequestQueue(jsonReqb);
+
+        JSONObject combined = new JSONObject();
+        try {
+            combined.put("BBC", first);
+            combined.put("CRIC", second);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-return view;
+
+          parseJsonFeed(combined);
+        return view;
+
     }
-  /*  String convertDate(String inputDate) {
 
-        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        form.setTimeZone(TimeZone.getTimeZone("GMT"));
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
-        try
-        {
-            date = form.parse(inputDate);
-        }
-        catch (ParseException e)
-        {
-
-            e.printStackTrace();
-        }
-        SimpleDateFormat postFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        String newDateStr = postFormater.format(date);
-        try
-        {
-            currentDate = form.parse(newDateStr);
-        }
-        catch (ParseException e)
-        {
-
-            e.printStackTrace();
-        }
-        long diffInMs = currentDate.getTime() - date.getTime();
-        String s = String.valueOf(diffInMs);
-       //  TimeUnit.DAYS.convert(currentDate.getTime() - date.getTime(), TimeUnit.SECONDS);
-      //  String s = String.valueOf(TimeUnit.MILLISECONDS.convert(date - currentDate, TimeUnit.MILLISECONDS));
-        return s;
-    }*/
-  String convertDate(String inputDate) {
-
-      SimpleDateFormat form = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-      form.setTimeZone(TimeZone.getTimeZone("GMT"));
-      Date date = null;
-      try
-      {
-          date = form.parse(inputDate);
-      }
-      catch (ParseException e)
-      {
-
-          e.printStackTrace();
-      }
-
-
-      String newDateStr = form.format(date);
-     return newDateStr;
-  }
-
-    /**
-     * Parsing json reponse and passing the data to feed view list adapter
-     * */
+    @Override
+    public void onPause() {
+        RequestQueue requestQueue= Volley.newRequestQueue(Sports.this.getActivity());
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
+        super.onPause();
+    }
     private void parseJsonFeed(JSONObject response) {
         try {
-            JSONArray feedArray = response.getJSONArray("articles");
+            JSONObject BBC = response.getJSONObject("BBC");
+            JSONObject CRIC = response.getJSONObject("CRIC");
+            JSONArray BBCa = BBC.getJSONArray("articles");
+            JSONArray CRICa = CRIC.getJSONArray("articles");
+            for (  i = 0; i < BBCa.length(); i++) {
+                JSONObject feedObj = (JSONObject) BBCa.get(i);
+                if(feedItems.size()>15){
 
-            for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
-
+                    break;
+                }
                 FeedItem item = new FeedItem();
                item.setId(i);
-                item.setSource("BBC");
-
-                // Image might be null sometimes
+                item.setSource("BBC SPORTS");
                 String image = feedObj.isNull("urlToImage") ? null : feedObj
                         .getString("urlToImage");
                 item.setImge(image);
@@ -183,19 +160,58 @@ return view;
                 item.setDescription(feedObj.getString("description"));
               //  item.setProfilePic(feedObj.getString("profilePic"));
                // img.setImageResource(R.drawable.bbc);
-                item.setTimeStamp(feedObj.getString("publishedAt"));
-                 // item.setTimeStamp("1403375851930");
-                // url might be null sometimes
+               // item.setTimeStamp(feedObj.getString("publishedAt"));
+                String time = feedObj.isNull("publishedAt") ? null : feedObj
+                        .getString("publishedAt");
+                item.setTimeStamp(time);
+
                 String feedUrl = feedObj.isNull("url") ? null : feedObj
                         .getString("url");
                 item.setUrl(feedUrl);
 
                 feedItems.add(item);
             }
+            int k = 0;
+            for ( int j=i+1; i < CRICa.length()+i; j++) {
+                if(feedItems.size()>15){
 
-            // notify data changes to list adapater
+                    break;
+                }
+                JSONObject feedObj = (JSONObject) CRICa.get(k);
+                  k=k+1;
+                FeedItem item1 = new FeedItem();
+                item1.setId(j);
+                item1.setSource("ESPN");
+                String image = feedObj.isNull("urlToImage") ? null : feedObj
+                        .getString("urlToImage");
+                item1.setImge(image);
+                item1.setTitle(feedObj.getString("title"));
+                item1.setDescription(feedObj.getString("description"));
+                //  item.setProfilePic(feedObj.getString("profilePic"));
+                // img.setImageResource(R.drawable.bbc);
+                // item.setTimeStamp(feedObj.getString("publishedAt"));
+                String time = feedObj.isNull("publishedAt") ? null : feedObj
+                        .getString("publishedAt");
+                item1.setTimeStamp(time);
+
+                String feedUrl = feedObj.isNull("url") ? null : feedObj
+                        .getString("url");
+                item1.setUrl(feedUrl);
+
+                feedItems.add(item1);
+                if(feedItems.size()>15){
+
+
+                }
+            }
             listAdapter.notifyDataSetChanged();
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }}
+    }
+
+    }
+
+

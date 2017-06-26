@@ -81,7 +81,13 @@ public class FeedListAdapter extends BaseAdapter {
                 Long.parseLong(item.getTimeStamp()),
                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
         timestamp.setText(timeAgo);  */
-        timestamp.setText(item.getTimeStamp());
+        if (!TextUtils.isEmpty(item.getTimeStamp())) {
+            timestamp.setText(item.getTimeStamp());
+            timestamp.setVisibility(View.VISIBLE);
+        } else {
+            // status is empty, remove from view
+            timestamp.setVisibility(View.GONE);
+        }
 
         // Chcek for empty status message
         if (!TextUtils.isEmpty(item.getTitle())) {
