@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.sports,
             R.drawable.technology,
             R.drawable.bussiness,
+            R.drawable.general,
 
     };
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
 
 
