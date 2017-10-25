@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:layout_marginBottom="30dp"
-    android:paddingBottom="2dp"
+    android:layout_marginBottom="800dp"
+    android:paddingBottom="20dp"
     android:background="@color/feed_bg"
     android:orientation="vertical" >
 
@@ -29,6 +29,7 @@
                 android:id="@+id/profilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
+                android:src="@drawable/logo"
                 android:scaleType="fitCenter" >
             </ImageView>
 
@@ -91,12 +92,7 @@
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:paddingTop="@dimen/feed_item_status_pad_top" />
         <View style="@style/Divider"/>
-       <ImageButton
-           android:id="@+id/share"
-           android:src="@drawable/shar"
-           android:layout_width="80dp"
-           android:layout_height="25dp">
-       </ImageButton>
+
     </LinearLayout>
 
 </LinearLayout>

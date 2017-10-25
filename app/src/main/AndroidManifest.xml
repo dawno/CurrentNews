@@ -11,13 +11,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name=".AppIntro">
-
-        </activity>
+        <activity android:name=".AppIntro" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/MyMaterialTheme">
+            android:theme="@style/MyMaterialTheme" />
+        <activity android:name=".splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

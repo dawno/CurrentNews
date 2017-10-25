@@ -4,4 +4,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">Current News</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">READ</string>
+    <string name="slide_1_desc">Read the latest news on current news</string>
+
+    <string name="slide_2_title">SHARE</string>
+    <string name="slide_2_desc">Share</string>
+
+
 </resources>

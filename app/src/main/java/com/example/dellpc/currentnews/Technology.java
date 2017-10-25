@@ -38,8 +38,8 @@ public class Technology extends Fragment {
     private Date date , currentDate;
     private List<TFeedItem> feedItems;
     private JSONObject first,second;
-    private String URL_FEED_1 = "https://newsapi.org/v1/articles?source=fortune&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
-    private String URL_FEED_2 = "https://newsapi.org/v1/articles?source=espn-cric-info&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
+    private String URL_FEED_1 = "https://newsapi.org/v1/articles?source=hacker-news&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
+    private String URL_FEED_2 = "https://newsapi.org/v1/articles?source=recode&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
     public Technology() {
         // Required empty public constructor
     }
@@ -152,7 +152,7 @@ public class Technology extends Fragment {
                 }
                 TFeedItem item = new TFeedItem();
                 item.setId(i);
-                item.setSource("BBC SPORTS");
+                item.setSource("HACKER NEWS");
                 String image = feedObj.isNull("urlToImage") ? null : feedObj
                         .getString("urlToImage");
                 item.setImge(image);
@@ -181,7 +181,7 @@ public class Technology extends Fragment {
                 k=k+1;
                 TFeedItem item1 = new TFeedItem();
                 item1.setId(j);
-                item1.setSource("ESPN");
+                item1.setSource("RECODE");
                 String image = feedObj.isNull("urlToImage") ? null : feedObj
                         .getString("urlToImage");
                 item1.setImge(image);

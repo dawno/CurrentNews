@@ -39,7 +39,7 @@ public class Sports extends Fragment {
     private  Date date , currentDate;
     private List<FeedItem> feedItems;
     private JSONObject first,second;
-    private String URL_FEED_1 = "https://newsapi.org/v1/articles?source=fortune&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
+    private String URL_FEED_1 = "https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
     private String URL_FEED_2 = "https://newsapi.org/v1/articles?source=espn-cric-info&sortBy=top&apiKey=0e7fe6582da9471aa0e2a67dab5fb6a0";
     public Sports() {
         // Required empty public constructor

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Sports(), "Sports");
         adapter.addFrag(new Technology(), "Technology");
-        adapter.addFrag(new Business(), "Business");
+       adapter.addFrag(new Business(), "Business");
         adapter.addFrag(new General(), "General");
         viewPager.setAdapter(adapter);
     }
